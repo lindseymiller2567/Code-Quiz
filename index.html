@@ -11,55 +11,39 @@
 
 <body>
 
+    <!-- Header -->
     <header>
         <div>
             <!--View high scores-->
-            <p>View High Scores</p>
+            <a href="./high-scores.html">View High Scores</a>
         </div>
         <div>
             <!-- Timer -->
-            <p>Timer Goes Here</p>
+            <p>Timer will begin when you start the quiz!</p>
         </div>
     </header>
 
-    <main>
-        <section>
-            <div>
-                <h1>Coding Quiz Challenge</h1>
-            </div>
-            <div>
-                <p>
-                    Try to answer the following code-related questions within the time limit.
-                    <br />
-                    Keep in mind that inorrect answers will penalize your score/time by ten seconds!
-                </p>
-            </div>
-            <div>
+    <!-- Main Content -->
+    <main class="main-container">
+        <div id="start-page" class="flex-column">
+            <h1>Coding Quiz Challenge</h1>
+            <p>
+                Try to answer the following code-related questions within the time limit.
+                <br />
+                Keep in mind that inorrect answers will penalize your score/time by ten seconds!
+            </p>
+            <a href="./game.html">
                 <button type="submit" class="startQuizBtn">
                     Start Quiz!
                 </button>
-            </div>
-        </section>
-    </main>
-
-    <main>
-        <section>
-            <div>
-                <!-- Intro/Question goes here -->
-            </div>
-            <div>
-                <!-- Answer options goes here -->
-            </div>
-            <div>
-                <!-- The correct answer will pop up here -->
-            </div>
-        </section>
+            </a>
+        </div>
     </main>
 
     <footer></footer>
 
     <!-- Javascript -->
-    <!-- <script src="./assets/js/script.js"></script> -->
+    <script src="./assets/js/script.js"></script>
 
 </body>
 
