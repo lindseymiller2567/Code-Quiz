@@ -65,3 +65,21 @@ button a {
     border-radius: 10px;
     margin: 20px;
 }
+
+#choice-text-1, #choice-text-2, #choice-text-3, #choice-text-4 {
+    width: 100%;
+    text-align: left;
+}
+
+#answer-text {
+    font-size: 20px;
+    font-style: italic;
+    color: gray;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+#final-score {
+    font-size: 30px;
+    color: purple;
+}

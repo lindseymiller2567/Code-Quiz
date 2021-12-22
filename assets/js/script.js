@@ -1,19 +1,18 @@
 // variables for page elements 
 var question = document.querySelector("#question")
+var choiceContainer = document.querySelector("#multiple-choice-container")
 var choiceText1 = document.querySelector("#choice-text-1")
 var choiceText2 = document.querySelector("#choice-text-2")
 var choiceText3 = document.querySelector("#choice-text-3")
 var choiceText4 = document.querySelector("#choice-text-4")
+var answerText = document.querySelector("#answer-text")
+var finalScore = document.querySelector("#final-score")
 var timer = document.querySelector("#timer")
+var form = document.querySelector("#form")
 
-
-//var currentQuestion = []
-var score = 0
+var score = ""
 var questionCounter = 0 // What question are you on?
 var availableQuestions = []
-
-var scorePoints = 100
-var maxQuestions = 4
 
 // create object array for the questions
 var quizQuestions = [
@@ -54,24 +53,34 @@ var quizQuestions = [
 
 // Timer/countdown function 
 function countdown() {
-    var timeLeft = 7; //change this to 100 later 
+
+    var timeLeft = 50;
 
     // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
     var timeInterval = setInterval(function () {
         if (timeLeft > 1) {
-            timer.textContent = "Time: " + timeLeft + " seconds remaining "
+            timer.textContent = "Time: " + timeLeft + " seconds remaining"
             timeLeft--
+            score = timeLeft
         } else if
             (timeLeft === 1) {
-            timer.textContent = "Time: " + timeLeft + " second remaining "
+            timer.textContent = "Time: " + timeLeft + " second remaining"
             timeLeft--
+            score = timeLeft
         }
         else {
             timer.textContent = " "
             clearInterval(timeInterval)
             timer.textContent = "You ran out of time!"
+            score = 0
         }
     }, 1000);
+}
+
+var subtractTime = function () {
+    score -= 10
+    console.log("Your current score is " + score)
+    timer.textContent = "Time: " + score + " seconds remaining"
 }
 
 // starts the quiz, makes sure the counter is at zero and assigns the questions array to avaiable questions
@@ -139,20 +148,51 @@ var checkAnswer = function (choiceNumber) {
 
     if (choiceNumber == correctAnswer) {
         console.log("You answered correct!")
+
+        // display whether answer was correct or incorrect
+        answerText.textContent = "Correct!"
+
         // need to increment counter by 1 and move through getQuestion function again
         questionCounter++
         console.log("the count is on question: " + questionCounter)
         if (questionCounter <= 3) {
             getQuestion()
         }
-        else (
-            console.log("the quiz is done")
-        )
+        else {
+            // let user save score and name to local storage
+            question.textContent = "All Done!"
+            finalScore.textContent = "Your final score is: " + score
+            choiceContainer.remove()
+            timer.remove()
+        }
     }
-    else (
+    else {
         console.log("Try again!")
-    )
+
+        // display whether answer was correct or incorrect
+        answerText.textContent = "Incorrect!"
+        subtractTime()
+
+        // need to increment counter by 1 and move through getQuestion function again
+        questionCounter++
+        console.log("the count is on question: " + questionCounter)
+        if (questionCounter <= 3) {
+            getQuestion()
+        }
+        else {
+            // let user save score and name to local storage
+            question.textContent = "All Done!"
+            finalScore.textContent = "Your final score is: " + score
+            choiceContainer.remove()
+            timer.remove()
+            // display form here for submiting initials and score using doc.createElement ? 
+        }
+    }
 }
+
+// create form element
+//var submitForm = document.createElement("form");
+
 
 // call the choiceHandler function to determine what happens if choice is clicked
 choiceText1.addEventListener("click", choiceHandler);
@@ -164,4 +204,4 @@ choiceText4.addEventListener("click", choiceHandler);
 startQuiz()
 
 // call the countdown function to start the timer
-// countdown()
+countdown()
