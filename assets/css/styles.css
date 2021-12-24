@@ -29,7 +29,7 @@ header div {
     margin: 70px 300px;
 }
 
-main h1, main div {
+.main-container h1 {
     font-size: 45px;
     margin: 20px;
 }
@@ -55,6 +55,10 @@ button a {
 }
 
 /* for game.html page */
+#question {
+    font-size: 45px;
+    margin: 20px;
+}
 .choice-container {
     display: flex;
     color: white;
@@ -82,4 +86,13 @@ button a {
 #final-score {
     font-size: 30px;
     color: purple;
+    margin-bottom: 20px;
+}
+
+.submit-form {
+    font-size: 30px;
+}
+
+.submit-form input {
+    padding: 12px 20px;
 }

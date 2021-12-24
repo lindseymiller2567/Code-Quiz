@@ -8,7 +8,7 @@ var choiceText4 = document.querySelector("#choice-text-4")
 var answerText = document.querySelector("#answer-text")
 var finalScore = document.querySelector("#final-score")
 var timer = document.querySelector("#timer")
-var form = document.querySelector("#form")
+var submitForm = document.querySelector(".submit-form")
 
 var score = ""
 var questionCounter = 0 // What question are you on?
@@ -69,7 +69,6 @@ function countdown() {
             score = timeLeft
         }
         else {
-            timer.textContent = " "
             clearInterval(timeInterval)
             timer.textContent = "You ran out of time!"
             score = 0
@@ -89,6 +88,7 @@ var startQuiz = function () {
     getQuestion()
 }
 
+// displays questions and multi choice answers on page
 var getQuestion = function () {
 
     var currentQuestion = quizQuestions[questionCounter]
@@ -144,7 +144,7 @@ var choiceHandler = function (event) {
 // check to see if the choice clicked was correct
 var checkAnswer = function (choiceNumber) {
     var correctAnswer = quizQuestions[questionCounter].answer
-    console.log("the correct answer is: " + correctAnswer)
+    //console.log("the correct answer is: " + correctAnswer)
 
     if (choiceNumber == correctAnswer) {
         console.log("You answered correct!")
@@ -164,10 +164,11 @@ var checkAnswer = function (choiceNumber) {
             finalScore.textContent = "Your final score is: " + score
             choiceContainer.remove()
             timer.remove()
+            createFormEl()
         }
     }
     else {
-        console.log("Try again!")
+        console.log("You answered incorrect!")
 
         // display whether answer was correct or incorrect
         answerText.textContent = "Incorrect!"
@@ -184,15 +185,36 @@ var checkAnswer = function (choiceNumber) {
             question.textContent = "All Done!"
             finalScore.textContent = "Your final score is: " + score
             choiceContainer.remove()
-            timer.remove()
-            // display form here for submiting initials and score using doc.createElement ? 
+            timer.remove() // is the timer still going? how do I make it stop?
+            createFormEl()
         }
     }
 }
 
-// create form element
-//var submitForm = document.createElement("form");
+var createFormEl = function () {
+    var labelEl = document.createElement("label")
+    labelEl.textContent = "Enter Initials: "
 
+    var inputEl = document.createElement("input")
+    inputEl.className = "initialsForm";
+
+    var submitBtn = document.createElement("button")
+    submitBtn.type = "submit"
+    submitBtn.textContent = "Submit"
+
+    submitForm.appendChild(labelEl)
+    submitForm.appendChild(inputEl)
+    submitForm.appendChild(submitBtn)
+
+    // if submit btn is clicked, save to local storage
+    submitBtn.addEventListener("click", saveScore)
+}
+
+// save all initials and scores to local storage
+var saveScore = function () {
+    localStorage.setItem("score", JSON.stringify(score))
+    //localStorage.setItem("initials", JSON.stringify(initials))
+};
 
 // call the choiceHandler function to determine what happens if choice is clicked
 choiceText1.addEventListener("click", choiceHandler);
