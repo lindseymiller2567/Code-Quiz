@@ -10,9 +10,12 @@ var finalScore = document.querySelector("#final-score")
 var timer = document.querySelector("#timer")
 var submitForm = document.querySelector(".submit-form")
 
-var score = ""
 var questionCounter = 0 // What question are you on?
 var availableQuestions = []
+
+var timeInterval
+
+var timeLeft = 50;
 
 // create object array for the questions
 var quizQuestions = [
@@ -54,32 +57,28 @@ var quizQuestions = [
 // Timer/countdown function 
 function countdown() {
 
-    var timeLeft = 50;
-
     // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
-    var timeInterval = setInterval(function () {
+    timeInterval = setInterval(function () {
         if (timeLeft > 1) {
             timer.textContent = "Time: " + timeLeft + " seconds remaining"
             timeLeft--
-            score = timeLeft
         } else if
             (timeLeft === 1) {
             timer.textContent = "Time: " + timeLeft + " second remaining"
             timeLeft--
-            score = timeLeft
         }
         else {
             clearInterval(timeInterval)
             timer.textContent = "You ran out of time!"
-            score = 0
+            timeLeft = 0
         }
     }, 1000);
 }
 
 var subtractTime = function () {
-    score -= 10
-    console.log("Your current score is " + score)
-    timer.textContent = "Time: " + score + " seconds remaining"
+    timeLeft -= 10
+    console.log("Your current score is " + timeLeft)
+    timer.textContent = "Time: " + timeLeft + " seconds remaining"
 }
 
 // starts the quiz, makes sure the counter is at zero and assigns the questions array to avaiable questions
@@ -117,8 +116,8 @@ var getQuestion = function () {
 
 }
 
+// check to see which choice was clicked 
 var choiceHandler = function (event) {
-    // check to see which choice was clicked 
     var targetEl = event.target
     //console.log(targetEl)
 
@@ -158,11 +157,12 @@ var checkAnswer = function (choiceNumber) {
         if (questionCounter <= 3) {
             getQuestion()
         }
-        else {
+        else { // if there are no more questions left
             // let user save score and name to local storage
             question.textContent = "All Done!"
-            finalScore.textContent = "Your final score is: " + score
+            finalScore.textContent = "Your final score is: " + timeLeft
             choiceContainer.remove()
+            clearInterval(timeInterval)
             timer.remove()
             createFormEl()
         }
@@ -172,7 +172,7 @@ var checkAnswer = function (choiceNumber) {
 
         // display whether answer was correct or incorrect
         answerText.textContent = "Incorrect!"
-        subtractTime()
+        subtractTime() // function subtracts 10 from the countdown/score
 
         // need to increment counter by 1 and move through getQuestion function again
         questionCounter++
@@ -180,11 +180,12 @@ var checkAnswer = function (choiceNumber) {
         if (questionCounter <= 3) {
             getQuestion()
         }
-        else {
+        else { // if there are no more questions left
             // let user save score and name to local storage
             question.textContent = "All Done!"
-            finalScore.textContent = "Your final score is: " + score
+            finalScore.textContent = "Your final score is: " + timeLeft
             choiceContainer.remove()
+            clearInterval(timeInterval)
             timer.remove() // is the timer still going? how do I make it stop?
             createFormEl()
         }
@@ -212,8 +213,10 @@ var createFormEl = function () {
 
 // save all initials and scores to local storage
 var saveScore = function () {
-    localStorage.setItem("score", JSON.stringify(score))
-    //localStorage.setItem("initials", JSON.stringify(initials))
+    localStorage.setItem("score", JSON.stringify(timeLeft))
+
+    var initials = document.querySelector(".initialsForm").value
+    localStorage.setItem("initials", initials)
 };
 
 // call the choiceHandler function to determine what happens if choice is clicked
