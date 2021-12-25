@@ -14,45 +14,46 @@ var questionCounter = 0 // What question are you on?
 var availableQuestions = []
 
 var timeInterval
-
 var timeLeft = 50;
+
+// create array to hold initials/scores for saving
+var initialsScores = [];
 
 // create object array for the questions
 var quizQuestions = [
     {
-        question: "What is 2 + 2 ?",
-        choice1: "5",
-        choice2: "3",
-        choice3: "4",
-        choice4: "9",
+        question: "How do you create a function in JavaScript?",
+        choice1: "function()",
+        choice2: "create myFunction = function()",
+        choice3: "var myFunction = function()",
+        choice4: "function.create",
         answer: 3
     },
     {
-        question: "What is 9 + 2 ?",
-        choice1: "11",
-        choice2: "3",
-        choice3: "4",
-        choice4: "9",
+        question: "What is the method that converts a JavaScript object or value into a string?",
+        choice1: "JSON.stringify()",
+        choice2: "make.string()",
+        choice3: "JSON.parse()",
+        choice4: "stringify()",
         answer: 1
     },
     {
-        question: "What is 10 + 2 ?",
-        choice1: "5",
-        choice2: "3",
-        choice3: "12",
-        choice4: "9",
+        question: "Where does the script tag go in the HTML file? ",
+        choice1: "<head> section",
+        choice2: "<body> section ",
+        choice3: "Both <head> or <body> section",
+        choice4: "<footer> section",
         answer: 3
     },
     {
-        question: "What is 11 + 2 ?",
-        choice1: "5",
-        choice2: "3",
-        choice3: "4",
-        choice4: "13",
+        question: "Which of the below choices can be objects?",
+        choice1: "Booleans",
+        choice2: "Numbers",
+        choice3: "Strings",
+        choice4: "All of the above",
         answer: 4
     }
 ];
-
 
 // Timer/countdown function 
 function countdown() {
@@ -77,7 +78,6 @@ function countdown() {
 
 var subtractTime = function () {
     timeLeft -= 10
-    console.log("Your current score is " + timeLeft)
     timer.textContent = "Time: " + timeLeft + " seconds remaining"
 }
 
@@ -91,11 +91,7 @@ var startQuiz = function () {
 var getQuestion = function () {
 
     var currentQuestion = quizQuestions[questionCounter]
-    console.log(currentQuestion)
-
     var questionText = currentQuestion.question
-    console.log(questionText)
-
     question.textContent = questionText
 
     // choice 1
@@ -119,7 +115,6 @@ var getQuestion = function () {
 // check to see which choice was clicked 
 var choiceHandler = function (event) {
     var targetEl = event.target
-    //console.log(targetEl)
 
     if (targetEl.matches("#choice-text-1")) {
         var choiceNumber = targetEl.getAttribute("data-number");
@@ -137,13 +132,11 @@ var choiceHandler = function (event) {
         var choiceNumber = targetEl.getAttribute("data-number");
         checkAnswer(choiceNumber);
     }
-
 }
 
 // check to see if the choice clicked was correct
 var checkAnswer = function (choiceNumber) {
     var correctAnswer = quizQuestions[questionCounter].answer
-    //console.log("the correct answer is: " + correctAnswer)
 
     if (choiceNumber == correctAnswer) {
         console.log("You answered correct!")
@@ -153,7 +146,30 @@ var checkAnswer = function (choiceNumber) {
 
         // need to increment counter by 1 and move through getQuestion function again
         questionCounter++
-        console.log("the count is on question: " + questionCounter)
+
+        if (questionCounter <= 3) {
+            getQuestion()
+        }
+        else { // if there are no more questions left
+            // let user save score and name to local storage
+            question.textContent = "All Done!"
+            finalScore.textContent = "Your final score is: " + timeLeft
+            choiceContainer.remove() // removes container from displaying on page
+            clearInterval(timeInterval)
+            timer.remove() // removes timer from displaying on page
+            createFormEl()
+        }
+    }
+    else {
+        console.log("You answered incorrect!")
+
+        // display whether answer was correct or incorrect
+        answerText.textContent = "Incorrect!"
+        subtractTime() // function subtracts 10 from the countdown/score
+
+        // need to increment counter by 1 and move through getQuestion function again
+        questionCounter++
+
         if (questionCounter <= 3) {
             getQuestion()
         }
@@ -167,31 +183,9 @@ var checkAnswer = function (choiceNumber) {
             createFormEl()
         }
     }
-    else {
-        console.log("You answered incorrect!")
-
-        // display whether answer was correct or incorrect
-        answerText.textContent = "Incorrect!"
-        subtractTime() // function subtracts 10 from the countdown/score
-
-        // need to increment counter by 1 and move through getQuestion function again
-        questionCounter++
-        console.log("the count is on question: " + questionCounter)
-        if (questionCounter <= 3) {
-            getQuestion()
-        }
-        else { // if there are no more questions left
-            // let user save score and name to local storage
-            question.textContent = "All Done!"
-            finalScore.textContent = "Your final score is: " + timeLeft
-            choiceContainer.remove()
-            clearInterval(timeInterval)
-            timer.remove() // is the timer still going? how do I make it stop?
-            createFormEl()
-        }
-    }
 }
 
+// creates the submit btn and input field for entering initials
 var createFormEl = function () {
     var labelEl = document.createElement("label")
     labelEl.textContent = "Enter Initials: "
@@ -213,11 +207,21 @@ var createFormEl = function () {
 
 // save all initials and scores to local storage
 var saveScore = function () {
-    localStorage.setItem("score", JSON.stringify(timeLeft))
+    answerText.textContent = "Check the high scores to see where you rank!"
 
+    // grabs the initials that were entered in the input field
     var initials = document.querySelector(".initialsForm").value
-    localStorage.setItem("initials", initials)
+
+    var initialsScoresDataObj = {
+        score: timeLeft,
+        initials: initials,
+    } // need to add data- attribute here to save multiple scores and initials 
+
+    initialsScores.push(initialsScoresDataObj)
+
+    localStorage.setItem("playerScore", JSON.stringify(initialsScoresDataObj))
 };
+
 
 // call the choiceHandler function to determine what happens if choice is clicked
 choiceText1.addEventListener("click", choiceHandler);
