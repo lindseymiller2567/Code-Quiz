@@ -20,13 +20,6 @@ var loadScores = function () {
 
     var number = savedScores.score
     scoreNumber.textContent = number
-
-    // // loop through savedScores array
-    // for (var i = 0; i < savedScores.length; i++) {
-    //   // pass each task object into the 'createTaskEl()' function
-    //   //createTaskEl(savedTasks[i]);
-    // }
-
 }
 
 loadScores()
